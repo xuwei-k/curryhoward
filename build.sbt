@@ -2,17 +2,10 @@ lazy val common = Seq(
   scalaVersion := "2.12.6",
   crossScalaVersions := Seq("2.11.12", "2.12.6"),
   libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.0.4" % Test,
-    "org.scalacheck" %% "scalacheck" % "1.13.5" % Test
+    "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % Test
   )
 )
 
-// Do `sbt tut` to build the tutorial.
-enablePlugins(TutPlugin)
-
-tutSourceDirectory := (sourceDirectory in curryhoward in Compile).value / "tut"
-tutTargetDirectory := baseDirectory.value / "docs" //(crossTarget in core).value / "tut"
-scalacOptions in Tut := scalacOptions.value.filterNot(disableWarningsForTut.contains)
 
 lazy val disableWarningsForTut = Set(
   "-Ywarn-unused"
@@ -40,7 +33,6 @@ lazy val scalacOptionsRobNorris = Seq(
   "-Xcheckinit", // Wrap field accessors to throw an exception on uninitialized access.
   //  "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
   "-Xfuture", // Turn on future language features.
-  "-Xlint:adapted-args", // Warn if an argument list is modified to match the receiver.
   "-Xlint:by-name-right-associative", // By-name parameter of right associative operator.
   "-Xlint:delayedinit-select", // Selecting member of DelayedInit.
   "-Xlint:doc-detached", // A Scaladoc comment appears to be detached from its element.
@@ -56,8 +48,6 @@ lazy val scalacOptionsRobNorris = Seq(
   "-Xlint:stars-align", // Pattern sequence wildcard must align with sequence component.
   "-Xlint:type-parameter-shadow", // A local type parameter shadows a type already in scope.
   "-Xlint:unsound-match", // Pattern match may not be typesafe.
-  "-Yno-adapted-args", // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
-  "-Ypartial-unification", // Enable partial unification in type constructor inference
   "-Ywarn-dead-code", // Warn when dead code is identified.
   "-Ywarn-inaccessible", // Warn about inaccessible types in method signatures.
   "-Ywarn-infer-any", // Warn when a type argument is inferred to be `Any`.
@@ -88,7 +78,6 @@ lazy val myScalacOptions = Seq(
   "-language:implicitConversions",
   "-Ydelambdafy:inline",
   "-Xlint",
-  "-Yno-adapted-args", // Makes calling a() fail to substitute a Unit argument into a.apply(x: Unit)
   "-Ywarn-dead-code", // N.B. doesn't work well with the ??? hole
   "-Ywarn-numeric-widen",
   "-Ywarn-value-discard",
@@ -117,9 +106,7 @@ lazy val curryhoward: Project = (project in file("."))
         case _ ⇒ false
       })
         scalacOptionsRobNorris212AndAbove ++ Seq(
-          "-opt:l:inline",
-          "-Ypartial-unification",
-          "-Yvirtpatmat"
+          "-opt:l:inline"
         )
       else Nil
       )).distinct, // (SI-2712 pertains to partial-unification)
@@ -131,7 +118,6 @@ lazy val curryhoward: Project = (project in file("."))
     libraryDependencies ++= Seq(
       // We need scala-reflect because we use macros.
       "org.scala-lang" % "scala-reflect" % scalaVersion.value
-      , "com.github.alexarchambault" %% "scalacheck-shapeless_1.13" % "1.1.6" % Test
     )
   )
 

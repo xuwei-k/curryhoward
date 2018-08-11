@@ -4,20 +4,11 @@ language: scala
 # sudo: false
 # dist: trusty
 
-scala:
-  - 2.11.12
-  - 2.12.6
 jdk:
   - oraclejdk8
 
-addons:
-  apt:
-    packages:
-      - oracle-java8-installer
-      - oracle-java8-set-default
-
 script:
-  - sbt clean coverage test coverageReport package package-doc
+  - sbt ++2.13.0-M4 compile
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

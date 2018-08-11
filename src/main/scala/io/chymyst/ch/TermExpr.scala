@@ -331,7 +331,7 @@ object TermExpr {
       override def combine(x: Set[String], y: Set[String]): Set[String] = x ++ y
     }
     foldMap(termExpr) {
-      case CurriedE(heads, body) ⇒ (heads.map(_.name).toSet -- body.freeVarNames) ++ unusedArgs(body)
+      case CurriedE(heads, body) ⇒ (heads.map(_.name).toSet -- body.freeVarNames.toSet) ++ unusedArgs(body)
       case MatchE(term, cases) ⇒ unusedArgs(term) ++ cases.flatMap {
         // The unused heads in this CurriedE are counted separately by `unusedMatchClauseVars`.
         case CurriedE(List(_), body) ⇒ unusedArgs(body)
